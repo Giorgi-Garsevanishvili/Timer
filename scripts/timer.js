@@ -12,6 +12,7 @@ displayTime();
 document.querySelector('.js-start-timer').addEventListener('click', () => {
   if (ins === false){
     timerStart();
+    document.querySelector('.js-start-timer').classList.add('start-active-css');
   } else {
     return ins;
   }
@@ -19,6 +20,7 @@ document.querySelector('.js-start-timer').addEventListener('click', () => {
 });
 
 document.querySelector('.js-stop-timer').addEventListener('click', () => {
+  document.querySelector('.js-start-timer').classList.remove('start-active-css');
   stopTimer();
 })
 
