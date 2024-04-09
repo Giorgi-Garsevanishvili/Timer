@@ -1,7 +1,13 @@
-let minutes = '00';
-let hours = '00';
-let seconds = '00';
+let timeArray = ['00', '00', '00'];
+let timerInterval;
 let ins = false;
+
+const savedTime = localStorage.getItem('savedtime')
+if (savedTime){
+  timeArray = JSON.parse(savedTime);
+};
+
+displayTime();
 
 document.querySelector('.js-start-timer').addEventListener('click', () => {
   if (ins === false){
@@ -12,36 +18,38 @@ document.querySelector('.js-start-timer').addEventListener('click', () => {
 
 });
 
+document.querySelector('.js-stop-timer').addEventListener('click', () => {
+  stopTimer();
+})
+
+document.querySelector('.js-reset-timer').addEventListener('click', () => {
+  stopTimer();
+  resetTimer();
+})
 
 
 
-function timerStart(val) {
+function timerStart() {
   ins = true;
 
   if (ins === true){
-    setInterval(() => {
-      seconds = pad(parseInt(seconds) + 1);
-      document.querySelector('.timer').innerHTML = `<p>${hours}:${minutes}:${seconds}</p>`;
-      console.log(seconds);
+    timerInterval = setInterval(() => {
+      timeArray[0] = pad(parseInt(timeArray[0]) + 1);
+      displayTime();
+        if (parseInt(timeArray[0]) === 60){
+          timeArray[0] = '00';
+          timeArray[1] = pad(parseInt(timeArray[1]) + 1);
+        };
+      saveTimer();
     }, 1000);
   
     setInterval(() => {
-      if (seconds = 60) {
-        seconds = '00';
-        minutes = pad(parseInt(minutes) + 1);
-        document.querySelector('.timer').innerHTML = `<p>${hours}:${minutes}:${seconds}</p>`;
-        console.log(minutes, seconds);
+      if (parseInt(timeArray[1]) === 60) {
+        timeArray[1] = '00';
+        timeArray[2] = pad(parseInt(timeArray[2]) + 1);
       }
+      saveTimer();
     }, 60000);
-  
-    setInterval(() => {
-      if (minutes = 60) {
-        minutes = '00';
-        hours = pad(parseInt(hours) + 1);
-        document.querySelector('.timer').innerHTML = `<p>${hours}:${minutes}:${seconds}</p>`;
-        console.log(hours,minutes, seconds);
-      }
-    }, 3600000);
   
     return ins;
   } else if (ins === false){
@@ -52,5 +60,30 @@ function timerStart(val) {
     return val < 10 ? '0' + val : val;
   };
   
+  saveTimer();
+}
 
+function stopTimer(){
+  if (ins === true){
+    clearInterval(timerInterval);
+    saveTimer();
+    ins = false;
+    return ins;
+  };
+  
+};
+
+
+function resetTimer (){
+  timeArray = ['00', '00', '00'];
+  displayTime();
+  saveTimer();
+}
+
+function saveTimer (){
+  localStorage.setItem('savedtime', JSON.stringify(timeArray));
+};
+
+function displayTime (){
+  document.querySelector('.timer').innerHTML = `<p>${timeArray[2]}:${timeArray[1]}:${timeArray[0]}</p>`;
 }
