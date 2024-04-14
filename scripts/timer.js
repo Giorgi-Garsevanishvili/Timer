@@ -25,6 +25,7 @@ document.querySelector('.js-stop-timer').addEventListener('click', () => {
 })
 
 document.querySelector('.js-reset-timer').addEventListener('click', () => {
+  document.querySelector('.js-start-timer').classList.remove('start-active-css');
   stopTimer();
   resetTimer();
 })
